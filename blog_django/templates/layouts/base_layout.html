@@ -1,0 +1,30 @@
+<!-- blog_django\templates\layouts\base_layout.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title_layout %}{% endblock title_layout %}</title>
+    <link rel="shortcut icon" href="{% static 'assets/favicon.ico' %}" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        clifford: "#da373d",
+                    },
+                },
+            },
+        };
+    </script>
+    {% block extra_head_layout %}{% endblock extra_head_layout %}
+</head>
+
+<body class="min-w-[280px]">
+    {% block content_layout %}{% endblock content_layout %}
+</body>
+
+</html>

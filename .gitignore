@@ -1,0 +1,10 @@
+# created by virtualenv automatically
+env
+.env
+__pycache__
+db.sqlite3
+migrations
+.vscode
+/blog/media/*
+entorno
+staticfiles

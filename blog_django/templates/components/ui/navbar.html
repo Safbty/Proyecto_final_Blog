@@ -1,0 +1,9 @@
+<!-- blog_django\templates\components\ui\navbar.html -->
+<nav>
+    <ul class="flex gap-4">
+        <li><a href="{% url 'home' %}">Inicio</a></li>
+        <li><a href="{% url 'post:post_detail' slug='ejemplo-de-slug'
+    %}">Publicaciones</a></li>
+        <li><a href="{% url 'user:user_profile' %}">Perfil</a></li>
+    </ul>
+</nav>
