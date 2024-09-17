@@ -1,6 +1,7 @@
 # blog_django/blog_django/configurations/base.py
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # Define la ruta base del proyecto.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -14,8 +15,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 #SECRET_KEY = os.getenv(
 #'SECRET_KEY', 'django-insecure-r*bw(fop+@8e$85lzqh#_o1*ueh_5_v*9i^5tqztl56uj8bj4')
 
+# Cargar las variables de entorno desde el archivo .env
+load_dotenv()
 #Clave de mi archivo
-SECRET_KEY = os.getenv('SECRET_KEY','django-insecure-t)m5ld-3t*-%#u!pef-534z6c8#a&z2av6kpy1^av(7i9x96kw')
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 
 #ALLOWED_HOSTS = ("localhost")
@@ -119,6 +122,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #TODO CAMBIAR CONFIGURACIONES DE SEGURIDAD
+#TODO CAMBIAR EN A LANG= ES-AR
 
 """
 # blog_django/blog_django/configurations/base.py
@@ -127,7 +131,6 @@ SECRET_KEY = os.getenv(
 fop+@8e$85lzqh#_o1*ueh_5_v*9i^5tqztl56uj8bj4')
 # 1- Eliminar la clave secreta del historial del repositorio
 # Este comando eliminará el archivo settings.py del historial de Git.
-CLASE20.md 2024-09-11
 # Posteriormente, deberiamos volver a agregar el archivo sin la clave secreta.
 git filter-branch --force --index-filter \
 "git rm --cached --ignore-unmatch blog_django/settings.py" \
