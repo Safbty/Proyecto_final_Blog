@@ -16,14 +16,17 @@ class Post(models.Model):
     modification_date= models.DateField(auto_now= True)
     allow_comments= models.BooleanField(default= True)
 
-    category = 
+    #category =  models.ForeignKey('Category', on_delete=models.CASCADE, null=True, blank=True)
+
 
     def __str__(self):
         return self.title
     
     @property
+    #TODO definir comments
     def amount_comments(self):
-        return self.comments.count() #TODO definir comments
+        return self.comments.count()
+
     
     def save(self,*args, **kwargs):
         if not self.slug:
@@ -47,7 +50,7 @@ class Post(models.Model):
 
 
 
-#TODO definir categoria (puede ser foreignkey)
+
 #TODO crear nueva app comnetarios para definirlos a parte
 #TODO definir portada (portrait image_file)
 
@@ -60,6 +63,10 @@ class Comment(models.Model):
 
     #TODO terminar de definir funcion
     def __str__(self):
+        return self.content
+    
+    
+
 
 
 

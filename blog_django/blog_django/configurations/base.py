@@ -12,8 +12,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 
 # Define la clave secreta de la aplicación.
-#SECRET_KEY = os.getenv(
-#'SECRET_KEY', 'django-insecure-r*bw(fop+@8e$85lzqh#_o1*ueh_5_v*9i^5tqztl56uj8bj4')
 
 # Cargar las variables de entorno desde el archivo .env
 load_dotenv()
@@ -36,6 +34,8 @@ INSTALLED_APPS = [
 'apps.post',
 'apps.user',
 ]
+
+
 # Middleware configuration
 # Define los middleware que se aplicarán a las solicitudes y respuestas de la aplicación.
 # Los middleware son una serie de hooks o ganchos que se ejecutan antes o después de una vista.
@@ -48,6 +48,8 @@ MIDDLEWARE = [
 'django.contrib.messages.middleware.MessageMiddleware',
 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
 # Define la URL raíz de la aplicación.
 ROOT_URLCONF = 'blog_django.urls'
 TEMPLATES = [
@@ -65,6 +67,7 @@ TEMPLATES = [
 },
 },
 ]
+
 WSGI_APPLICATION = 'blog_django.wsgi.application'
 # Database settings will be set in local/production
 # Password validation
@@ -152,3 +155,7 @@ recomendable para prevenir futuras vulnerabilidades si la aplicacion ya se .
 deben tomar medidas adicionales (como limpiar sesiones [python manage.py
 clearsessions]) para proteger la aplicación.
 """
+
+#Configuracion para usar el nuevo modelo user
+AUTH_USER_MODEL = 'user.User'
+
