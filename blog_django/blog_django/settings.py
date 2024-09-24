@@ -11,4 +11,4 @@ if DJANGO_ENV == 'production':
     from .configurations.production import *
 else:
     from .configurations.local import *
-    
+
