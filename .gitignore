@@ -5,6 +5,7 @@ __pycache__
 db.sqlite3
 migrations
 .vscode
-/blog/media/*
+/blog/media/**/avatar
+/blog/media/**/cover
 entorno
 staticfiles
