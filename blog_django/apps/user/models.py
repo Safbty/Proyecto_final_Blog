@@ -1,4 +1,3 @@
-#from django.db import models
 
 # Create your models here.
 from django.contrib.auth.models import AbstractUser
@@ -15,11 +14,28 @@ def get_avatar_filename(instance, filename):
     #user/avatar/user_1_avatar.png
     return os.path.join ("user/avatar/", new_filename)
 
-#TODO agregar archivos de imagenes default en carpeta default (usuario, imagen de post, flavicon)
 
 class User(AbstractUser):
     id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     alias = models.CharField(max_length=30, blank=True)
     avatar = models.ImageField(upload_to= get_avatar_filename, default= "user/default/avatar_default.jpg")
 
-#TODO desconectar bdd en dbeaver y eliminar carpeta db.sqlite en vscode, luego activar entorno y realizar migraciones (editar base.py)
+    @property
+    def is_collaborator(self):
+        return self.groups.filter(name='Collaborators').exists()
+    
+    @property
+    def is_admin(self):
+        return self.groups.filter(name='Admins').exists()
+    
+    @property
+    def is_registered(self):
+        return self.groups.filter(name='Registered').exists()
+    
+
+
+#Nota:
+
+#Para poder definir estas propiedades, es necesario definir los grupos Collaborators, Admins y Registered en el panel de administración de Django, o mediante un signal en el archivo signals.py de la app User, como lo hicimos en clases anteriores.
+
+#El decorador @property nos permite definir un método como una propiedad, de manera que podamos acceder a ella como si fuera un atributo.

@@ -159,3 +159,4 @@ clearsessions]) para proteger la aplicación.
 #Configuracion para usar el nuevo modelo user
 AUTH_USER_MODEL = 'user.User'
 
+DEFAULT_POST_IMAGE = 'post/default/post_default.png'

@@ -13,16 +13,34 @@
     {% extends 'layouts/general_layout.html' %}
     {% block content %}
     <h1>Blog Informatorio 🚀</h1>
-    {% endblock content %}
-    
-    {% if user .is_authenticated %}
 
-        
+    {% if user.is_authenticated %}
+        <!-- Show logout link if user is authenticated -->
+        <a href="{% url 'logout' %}">Logout</a>
+    {% else %}
+        <!-- Show login link if user is not authenticated -->
+        <a href="{% url 'login' %}">Login</a>
     {% endif %}
-        
+
+    {% endblock content %}
+
+
 </body>
 
 </html>
 
 
-#TODO Agregar condiciones  para mostrar o no mostrar el login y el logout
+<!--TODO Agregar condiciones para mostrar o no mostrar el login y el logout (condion if)-->
+
+<!--TODO Definir views para ir a la pagina de login y logout-->
+
+<!--TODO Definir en settings.py el django.contrib.auth.context_processors.auth  para ir a la pagina de login y logout, para que usereste disponible en templates-->
+
+<!--TODO  Agregar un link para ir a la pagina de login y logout (definir urls)-->
+
+
+
+
+
+
+

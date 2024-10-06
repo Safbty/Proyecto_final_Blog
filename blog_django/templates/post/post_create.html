@@ -1,0 +1,24 @@
+<!-- blog_django\templates\post\post_create.html -->
+{% extends 'layouts/post_layout.html' %}
+{% block title %}Post | BLOG IA{% endblock title %}
+{% block content %}
+<h2>Crear nuevo post</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="flex flex-col gap-4">
+        <p class="flex flex-col">{{ form.title.label_tag }} {{ form.title }}</p>
+        <p class="flex flex-col">
+            <label for="id_content">Contenido:</label> {{ form.content }}
+        </p>
+        <p>{{ form.allow_comments.label_tag }} {{ form.allow_comments }}</p>
+        <p><input type="file" name="images" multiple /></p>
+    </div>
+    <button type="submit" class="bg-blue-500 text-white p-2 rounded-lg">
+        Crear Post
+    </button>
+</form>
+{% endblock content %}
+
+<!--En esta plantilla se ha definido un formulario que permite crear un nuevo post.
+Se ha definido un campo para el título, un campo para el contenido, un campo para permitir comentarios, y un campo para subir imágenes.
+Importante: El atributo enctype="multipart/form-data" es necesario para poder subir archivos.-->

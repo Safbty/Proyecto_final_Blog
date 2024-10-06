@@ -1,0 +1,21 @@
+
+{% extends 'layouts/post_layout.html' %}
+
+{% block title %}BORRAR Post | BLOG IA{% endblock title %}
+
+{% block content %}
+<h2>¿Estás seguro de que deseas eliminar este post?</h2>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Sí, eliminar</button>
+</form>
+
+<a href="{% url 'post:post_detail' slug=object.slug %}">Cancelar</a>
+{% comment %} <a href="javascript:history.back()">Cancelar</a> {% endcomment %}
+{% endblock content %}
+
+<!--En esta plantilla se ha definido un formulario para eliminar un post.
+Se ha definido un botón para confirmar la eliminación del post y un enlace para cancelar la acción.
+Nota: El atributo method="post" es necesario para poder enviar la petición de eliminación.
+Importante: En caso de querer redirigir a la vista anterior, se puede usar el enlace comentado en la
+plantilla.-->

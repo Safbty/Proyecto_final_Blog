@@ -14,20 +14,33 @@
 
 <nav>
     <ul class="flex gap-4">
-        <li><a href="{% url 'home' %}">Inicio</a></li>
         {% if user.is_authenticated %}
-        <!-- Mostrar opciones si el usuario está autenticado -->
+        {% if user.is_collaborator %}
+        <li><a href="{% url 'post:post_create' %}">Publicar</a></li>
+        {% endif %}
         <li><a href="{% url 'user:user_profile' %}">Perfil</a></li>
         <li>
-            <form method="POST" action="{% url 'user:auth_logout' %}">
+            <form method="post" action="{% url 'user:auth_logout' %}">
                 {% csrf_token %}
                 <button type="submit">Cerrar sesión</button>
             </form>
         </li>
         {% else %}
-        <!-- Mostrar opciones si el usuario NO está autenticado -->
         <li><a href="{% url 'user:auth_login' %}">Iniciar sesión</a></li>
         <li><a href="{% url 'user:auth_register' %}">Registrarse</a></li>
         {% endif %}
     </ul>
 </nav>
+
+
+<!--
+Nota:
+Hemos definido un bloque condicional para mostrar el enlace de Publicar solo si el usuario es un colaborador.
+Hemos definido un bloque condicional para mostrar el enlace de Perfil y Cerrar sesión si el usuario esta autenticado.
+Hemos definido un bloque condicional para mostrar los enlaces de Iniciar sesión y Registrarse si el usuario no esta autenticado.
+
+Importante:
+Para poder definir estos bloques condicionales, es necesario que el usuario este autenticado y que el modelo User tenga las propiedades is_collaborator, is_admin y is_registered.
+En caso de querer mostrar más enlaces de acuerdo al tipo de usuario, se pueden definir más bloques condicionales.
+Tener en cuenta que estas verificaciones son a nivel de plantilla, por lo que se recomienda hacer las verificaciones a nivel de view o middleware para mayor seguridad.
+-->
