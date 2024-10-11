@@ -8,7 +8,7 @@ import uuid
 #imagen3121212.png
 def get_avatar_filename(instance, filename):
     #imagen3121212     #.png        #imagen3121212.png
-    base_filename, file_extension= os.path.splittext(filename)
+    base_filename, file_extension= os.path.splitext(filename)
     #user_1_avatar.png
     new_filename = f"user_{instance.id}_avatar{file_extension}"
     #user/avatar/user_1_avatar.png

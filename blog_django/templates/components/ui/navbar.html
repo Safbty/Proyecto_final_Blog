@@ -5,9 +5,6 @@
         <li>
             <a href="{% url 'post:post_detail' slug='el-inicio-de-la-ia' %}">Ver Post</a>
         </li>
-        <li><a href="{% url 'user:user_profile' %}">Perfil</a></li>
-        <li><a href="{% url 'user:auth_login' %}">Iniciar sesión</a></li>
-        <li><a href="{% url 'user:auth_register' %}">Registrarse</a></li>
     </ul>
 </nav>
 
@@ -15,22 +12,27 @@
 <nav>
     <ul class="flex gap-4">
         {% if user.is_authenticated %}
+        <strong>{{ user.alias }}</strong>
         {% if user.is_collaborator %}
         <li><a href="{% url 'post:post_create' %}">Publicar</a></li>
         {% endif %}
         <li><a href="{% url 'user:user_profile' %}">Perfil</a></li>
         <li>
-            <form method="post" action="{% url 'user:auth_logout' %}">
+            <form method="post" action="{% url 'user:auth_logout' %}?next={{ request.path }}">
                 {% csrf_token %}
                 <button type="submit">Cerrar sesión</button>
             </form>
         </li>
         {% else %}
-        <li><a href="{% url 'user:auth_login' %}">Iniciar sesión</a></li>
+        <li>
+            <a href="{% url 'user:auth_login' %}?next={{ request.path }}">Iniciar sesión</a>
+        </li>
         <li><a href="{% url 'user:auth_register' %}">Registrarse</a></li>
         {% endif %}
     </ul>
 </nav>
+
+
 
 
 <!--
@@ -44,3 +46,10 @@ Para poder definir estos bloques condicionales, es necesario que el usuario este
 En caso de querer mostrar más enlaces de acuerdo al tipo de usuario, se pueden definir más bloques condicionales.
 Tener en cuenta que estas verificaciones son a nivel de plantilla, por lo que se recomienda hacer las verificaciones a nivel de view o middleware para mayor seguridad.
 -->
+
+<!--Nota: Añadimos el parámetro next={{ request.path }} a los botones de Iniciar sesión y Cerrar
+sesión. Esto permite redirigir al usuario a la página en la que estaba después de iniciar o cerrar sesión.
+Importante: El parámetro next se utiliza para redirigir al usuario a la página en la que estaba después
+de iniciar o cerrar sesión.
+Nota: El parámetro request.path contiene la URL de la página actual.-->
+

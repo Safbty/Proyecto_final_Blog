@@ -4,3 +4,93 @@
         BLOG {% include 'components/ui/navbar.html' %}
     </div>
 </header>
+
+
+<!--TODO: Terminar de definir estilo de navbar categoria-->
+<!--
+<nav>
+    <style>
+        nav a {
+            text-decoration: none;
+            color: blue;
+        }
+
+        :root {
+            --body-color: #010c15;
+            --box-bg: #26d0ce;
+            --box-fg: var(--body-color);
+            --box-border: #d3d3d3;
+            --box-width: 150px;
+            --border-radius: 5px;
+
+            color-scheme: dark;
+        }
+
+        body {
+            height: 25vh;
+            display: grid;
+            overflow: hidden;
+            place-content: top;
+            background-color: var(--body-color);
+        }
+
+        nav {
+            margin: 10%;
+            display: flex;
+            text-align: center;
+            font: bold 1.5rem sans-serif;
+            box-shadow: 0 5px 50px 0px rgb(255 255 255 / 0.3);
+
+            & a {
+                transition: 0.2s;
+                color: var(--box-fg);
+                text-decoration: none;
+                width: var(--box-width);
+                background: var(--box-bg);
+                padding: calc(var(--box-width) / 10);
+
+                &:first-child {
+                    border-top-left-radius: var(--border-radius);
+                    border-bottom-left-radius: var(--border-radius);
+                }
+
+                &:last-child {
+                    border-top-right-radius: var(--border-radius);
+                    border-bottom-right-radius: var(--border-radius);
+                }
+            }
+
+            &:hover {
+                & a {
+                    filter: blur(3px);
+                    opacity: 0.5;
+                    outline: 1px solid var(--box-bg);
+                }
+
+                & a:hover {
+                    filter: blur(0px);
+                    opacity: 1;
+                    outline: 1px solid var(--box-border);
+                }
+            }
+        }
+    </style>
+    <a href="#">Comedia</a>
+
+    <a href="#">Drama</a>
+
+    <a href="#">Terror</a>
+
+    <a href="#">Policial</a>
+
+    <a href="#">Ciencia Ficccion</a>
+
+    <a href="#">Documentales</a>
+
+    <a href="#">Fantasia</a>
+
+    <a href="#">Catastrofe</a>
+
+    <a href="#">Hechos reales</a>
+
+</nav> -->

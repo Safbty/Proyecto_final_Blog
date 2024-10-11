@@ -1,13 +1,14 @@
 # blog_django/apps/user/views.py
 # TODO: Cambiar TemplateView por DetailView para que se pueda ver el detalle de un perfil de usuario
 
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, DetailView
 from django.contrib.auth.views import LoginView as LoginViewDjango, LogoutView as LogoutViewDjango
 from apps.user.forms import RegisterForm, LoginForm
 from django.contrib.auth.models import Group
 from django.urls import reverse_lazy
 
-class UserProfileView(TemplateView):
+class UserProfileView(DetailView):
+    model =  'user.User'
     template_name = 'user/user_profile.html'
 
 class RegisterView(CreateView):
@@ -34,10 +35,17 @@ class LoginView(LoginViewDjango):
     authentication_form = LoginForm
     
     def get_success_url(self):
+        next_url = self.request.GET.get('next')
+        if next_url:
+            return next_url
         return reverse_lazy('home') # Redirige al home una vez logueado
 
 class LogoutView(LogoutViewDjango):
     def get_success_url(self):
+        def get_success_url(self):
+            next_url = self.request.GET.get('next')
+            if next_url:
+                return next_url
         return reverse_lazy('home')
     
 

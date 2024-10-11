@@ -6,6 +6,8 @@ from django.utils.text import slugify
 import os
 
 
+
+
 # Create your models here.
 class Post(models.Model):
     id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable= False)
@@ -79,11 +81,6 @@ class PostImage (models.Model):
 
 #TODO imagen cover.png default post en carpeta cover
 #Imagen de avatar en .png
-#TODO realizar migraciones(tabla post image)
-
-
-
-#TODO crear nueva app comnetarios para definirlos a parte
 #TODO definir portada (portrait image_file)
 
 class Comment(models.Model):
@@ -96,6 +93,7 @@ class Comment(models.Model):
     #TODO terminar de definir funcion
     def __str__(self):
         return self.content
+    
     
 
 class Category (models.Model):
