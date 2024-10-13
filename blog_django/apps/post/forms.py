@@ -1,13 +1,14 @@
 from django import forms
-from apps.post.models import Post, PostImage
-from apps.post.models import Comment
+from apps.post.models import Post, PostImage, Comment, Category
 
 
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title', 'content', 'allow_comments')
+        fields = ('title', 'content', 'allow_comments', 'category')
 
+
+#TODO ver porque imgen default se manteinen cuando ya se cargó una imagen para el post
 
 class NewPostForm(PostForm):
     image = forms.ImageField(required=False)
@@ -15,6 +16,8 @@ class NewPostForm(PostForm):
     def save(self, commit=True):
         # Guardar el post pero no aún en la base de datos ya que necesitamos el id del post para la imagen
         post = super().save(commit=False)
+        image = self.cleaned_data['image']
+
         if commit:
             post.save()  # Guardar el post
             if self.cleaned_data['image']:
@@ -22,6 +25,8 @@ class NewPostForm(PostForm):
                     # Creamos la imagen
                     post=post, image=self.cleaned_data['image'])
         return post
+
+
 
 
 class UpdatePostForm(PostForm):
@@ -80,6 +85,15 @@ class PostFilterForm(forms.Form):
         ),
         widget=forms.Select(attrs={'class': 'w-full p-2'})
     )        
+
+#FILTRO CATEGORIA
+class MovieFilterForm(forms.Form):
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        required=False,
+        empty_label="Selecciona un género",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
 
 #En este formulario, definimos el formulario UpdatePostForm que hereda de PostForm y agrega un campo image de tipo forms.ImageField.
 

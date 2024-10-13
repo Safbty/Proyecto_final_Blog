@@ -1,18 +1,23 @@
 
 {% extends 'layouts/post_layout.html' %}
 
-{% block title %}BORRAR Post | BLOG IA{% endblock title %}
+{% block title %}Borrar Post | ES CINE{% endblock title %}
 
 {% block content %}
-<h2>¿Estás seguro de que deseas eliminar este post?</h2>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Sí, eliminar</button>
-</form>
-
-<a href="{% url 'post:post_detail' slug=object.slug %}">Cancelar</a>
+<div class="flex justify-left">
+    <h2 class="text-white">¿Estás seguro de que deseas eliminar este post?</h2>
+</div>
+    <div class=" flex flex-nowrap p-4">
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="m-4 rounded-full font-bold text-white p-2 transition ease-in-out delay-150 bg-red-500 hover:-translate-y-1 hover:scale-110 hover:bg-red-900 duration-300">Sí, eliminar</button>
+        </form>
+        <a href="{% url 'post:post_detail' slug=object.slug %}" class="m-4 rounded-full font-bold text-white p-2 transition ease-in-out delay-150 bg-blue-800 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">Cancelar</a>
 {% comment %} <a href="javascript:history.back()">Cancelar</a> {% endcomment %}
+    </div>
 {% endblock content %}
+
+<!--TODO aplicar configuracion de botones animados-->
 
 <!--En esta plantilla se ha definido un formulario para eliminar un post.
 Se ha definido un botón para confirmar la eliminación del post y un enlace para cancelar la acción.

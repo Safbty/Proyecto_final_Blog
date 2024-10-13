@@ -6,10 +6,16 @@ from django.contrib.auth.views import LoginView as LoginViewDjango, LogoutView a
 from apps.user.forms import RegisterForm, LoginForm
 from django.contrib.auth.models import Group
 from django.urls import reverse_lazy
+from apps.user.models import User
 
 class UserProfileView(DetailView):
-    model =  'user.User'
+    model =  User
     template_name = 'user/user_profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.object  # Agrega el usuario al contexto si lo necesitas
+        return context
 
 class RegisterView(CreateView):
     template_name = 'auth/auth_register.html'

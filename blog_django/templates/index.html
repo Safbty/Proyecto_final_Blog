@@ -1,4 +1,5 @@
 <!-- blog_django/templates/index.html -->
+<!-- blog_django/templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,30 +7,19 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Blog</title>
-
-
-
+    <title>ES CINE</title>
 </head>
 
-
-
 <body>
-    {% extends 'layouts/general_layout.html' %}
-    {% block content %}
-    <h1>Blog Informatorio 🚀</h1>
+    
 
-    {% if user.is_authenticated %}
-        <!-- Show logout link if user is authenticated -->
-        <a href="{% url 'logout' %}">Logout</a>
-    {% else %}
-        <!-- Show login link if user is not authenticated -->
-        <a href="{% url 'login' %}">Login</a>
-    {% endif %}
+    {% block content %}
+
+    <!-- Aquí incluimos la plantilla de la lista de posts -->
+    {% include 'post/post_list.html' %}
+
 
     {% endblock content %}
-
-
 </body>
 
 </html>
@@ -42,6 +32,8 @@
 <!--TODO Definir en settings.py el django.contrib.auth.context_processors.auth  para ir a la pagina de login y logout, para que usereste disponible en templates-->
 
 <!--TODO  Agregar un link para ir a la pagina de login y logout (definir urls)-->
+
+<!--TODO terminar de definir las categorias em un navbar-->
 
 
 

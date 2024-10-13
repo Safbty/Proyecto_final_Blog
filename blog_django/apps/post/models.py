@@ -19,6 +19,7 @@ class Post(models.Model):
     modification_date= models.DateField(auto_now= True)
     allow_comments= models.BooleanField(default= True)
 
+#TODO Definir categorias para generos de peliculas
     category = models.ForeignKey('Category', on_delete=models.CASCADE, null=True, blank=True, related_name='posts')
 
 
@@ -26,12 +27,10 @@ class Post(models.Model):
         return self.title
     
     @property
-    #TODO definir comments
     def amount_comments(self):
         return self.comments.count()
 
     @property
-    #TODO definir imagenes
     def amount_images(self):
         return self.images.count()
 
@@ -42,10 +41,9 @@ class Post(models.Model):
             self.slug = self.generate_unique_slug()
         super().save(*args, **kwargs)
         
-        if not self.images.exists():
-            PostImage.objects.create(post=self, image='post/default/post_default.png')
+        #if not self.images.exists():
+            #PostImage.objects.create(post=self, image=settings.DEFAULT_POST_IMAGE)
 
-        #TODO definir imagenes portada
     
     def generate_unique_slug(self):
         #tenemos este titulo par el post 1
@@ -61,7 +59,6 @@ class Post(models.Model):
         return unique_slug    
 
 
-# blog_django/apps/post/models.py
 def get_image_filename(instance, filename):
     post_id = instance.post.id
     images_count = instance.post.images.count()
@@ -73,15 +70,14 @@ class PostImage (models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to=get_image_filename, default='post/default/post_default.png')
     active =  models.BooleanField(default=True)
+    creation_date =  models.DateTimeField(default= timezone.now)
 
 
 
     def __str__(self):
         return f"PostImage {self.id}"
 
-#TODO imagen cover.png default post en carpeta cover
-#Imagen de avatar en .png
-#TODO definir portada (portrait image_file)
+
 
 class Comment(models.Model):
     id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable= False)
@@ -90,13 +86,75 @@ class Comment(models.Model):
     author= models.ForeignKey(settings.AUTH_USER_MODEL, on_delete= models.CASCADE)
     post= models.ForeignKey(Post, on_delete= models.CASCADE, related_name="comments")
 
-    #TODO terminar de definir funcion
     def __str__(self):
         return self.content
     
-    
+
+#TODO CLASE CATEGORIA
 
 class Category (models.Model):
     id =  models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=100, unique= True)
+    slug = models.SlugField(max_length=200, unique=True)
+
+    def __str__(self):
+        return self.title
+    
+#TODO CLASE MOVIE
+
+class Movie(models.Model):
     title = models.CharField(max_length=200)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='category_posts')
+    description = models.TextField()
+    release_date = models.DateField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
+
+    
+    
+
+
+
+
+#from django.contrib import admin
+
+# Register your models here.
+#from categories.models import Category
+
+#@admin.register(Category)
+#class CategoryAdmin(admin.ModelAdmin):
+ #   """Category admin."""
+
+  #  list_display = ('id', 'name')
+
+#-----------------------------------
+
+#from django.apps import AppConfig
+#class CategoriesConfig(AppConfig):
+    #name = 'categories'
+
+#----------------------------------
+
+#""Categories"""
+
+#from django.db import models
+
+# Models
+
+# Create your models here.
+#class Category(models.Model):
+#   """Category model."""
+    
+#    name = models.CharField(max_length=100,unique=True)
+
+#    class Meta:
+#        ordering = ('name',)
+
+#    def __str__(self):
+#        return self.name
+
+#------------------------------------
+
+
+

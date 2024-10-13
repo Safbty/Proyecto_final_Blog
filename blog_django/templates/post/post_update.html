@@ -1,6 +1,6 @@
 {% extends 'layouts/post_layout.html' %}
 
-{% block title %}ACTUALIZAR Post | BLOG IA{% endblock title %}
+{% block title %}ACTUALIZAR Post | ES CINE{% endblock title %}
 
 {% block content %}
 <h2>Actualizar: {{ form.instance.title }}</h2>
@@ -31,8 +31,7 @@
     {% comment %} <p>{{ active_img.creation_date }}</p> {% endcomment %}
     <p>
       <a href="{{ active_img.image.url }}" target="_blank">
-        <img class="inline-flex w-[200px] aspect-[16/9] object-cover" src="{{ active_img.image.url }}"
-          alt="Portada {{ active_img.id }} del post" />
+        <img class="inline-flex w-[200px] aspect-[16/9] object-cover" src="{{ active_img.image.url }}" alt="Portada {{ active_img.id }} del post" />
       </a>
       <input type="checkbox" name="keep_image_{{ active_img.id }}" id="keep_image_{{ active_img.id }}" checked />
       <label for="keep_image_{{ active_img.id }}">Activa</label>
@@ -44,11 +43,8 @@
 
   <input type="file" name="images" multiple />
   <div class="flex gap-2">
-    <a href="{% url 'post:post_detail' slug=form.instance.slug %}"
-      class="bg-red-500 text-white p-2 rounded-md">Cancelar</a>
-    <button type="submit" class="bg-blue-500 text-white p-2 rounded-md">
-      Guardar cambios
-    </button>
+    <a href="{% url 'post:post_detail' slug=form.instance.slug %}" class="bg-red-500 text-white p-2 rounded-md">Cancelar</a>
+    <button type="submit" class="bg-blue-500 text-white p-2 rounded-md">Guardar cambios</button>
   </div>
 </form>
 

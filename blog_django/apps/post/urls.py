@@ -1,6 +1,7 @@
 # blog_django/apps/post/urls.py
 from django.urls import path
 import apps.post.views as views
+from .views import UserPostView
 app_name = 'post'
 
 urlpatterns = [
@@ -22,7 +23,9 @@ urlpatterns = [
     path('posts/<slug:slug>/comments/create/', views.CommentCreateView.as_view(), name='comment_create'),
     path('comments/<uuid:pk>/update/', views.CommentUpdateView.as_view(), name='comment_update'),
     path('comments/<uuid:pk>/delete/', views.CommentDeleteView.as_view(), name='comment_delete'),
+    path('user/', UserPostView.as_view(), name='user_posts'),  # Nueva URL para posts de un usuario 
 ]
+
 
 """
 post_list: URL para listar los posts.

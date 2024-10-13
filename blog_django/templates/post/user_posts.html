@@ -1,0 +1,37 @@
+<!-- templates/post/user_post_list.html -->
+<!-- templates/user_posts.html -->
+{% extends 'layouts/general_layout.html' %}
+{% block content %}
+    <h1 class="text-white">Mis Posts</h1>
+
+    {% if posts %}
+        <ul>
+            {% for post in posts %}
+                <li>
+                    <a href="{% url 'post:post_detail' slug=post.slug %}" class="text-white">{{ post.title }}</a> - {{ post.creation_date }}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <!-- Paginación -->
+        {% if is_paginated %}
+            <div>
+                <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+            </div>
+            <div>
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">Primero</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">Último</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <p>No has creado ningún post.</p>
+    {% endif %}
+{% endblock %}
+
+<!--TODO editar visualizacion de "Mis Posts"-->

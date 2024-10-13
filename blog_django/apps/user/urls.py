@@ -5,7 +5,7 @@ import apps.user.views as views
 app_name = 'user'
 
 urlpatterns = [
-    path('users/profile/', views.UserProfileView.as_view(), name="user_profile"),
+    path('users/profile/<uuid:pk>/', views.UserProfileView.as_view(), name="user_profile"),
     path('auth/register/', views.RegisterView.as_view(), name="auth_register"),
     path('auth/login/', views.LoginView.as_view(), name="auth_login"),
     path('auth/logout/', views.LogoutView.as_view(), name="auth_logout"),

@@ -1,0 +1,18 @@
+<!-- movies/movie_list.html -->
+<h1 class="text-2xl font-bold">
+    {% if category %}
+        Películas de género: {{ category.name }}
+    {% else %}
+        Todas las películas
+    {% endif %}
+</h1>
+
+<div class="grid grid-cols-3 gap-4">
+    {% for movie in movies %}
+        <div class="movie-card bg-white p-4 shadow-md">
+            <h2 class="text-xl">{{ movie.title }}</h2>
+            <p>{{ movie.description }}</p>
+            <!-- Otros datos de la película -->
+        </div>
+    {% endfor %}
+</div>

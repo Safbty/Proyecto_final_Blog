@@ -11,10 +11,22 @@
 
 <body>
     {% extends 'layouts/general_layout.html' %}
+    {% load static %}
     {% block title %}User Profile{% endblock title %}
     {% block content %}
-    <h1>User Profile 😎</h1>
+    <div>
+    <h1 class="text-white">User Profile 😎</h1>
+    </div>
+    <p class="text-white">Alias: {{ user.alias }}</p>
+    {% if user.avatar %}
+        <img src="{{ user.avatar.url }}" alt="Avatar de {{ user.alias }}">
+    {% else %}
+        <img src="{% static 'user/default/avatar_default.jpg' %}" alt="Avatar por defecto">
+    {% endif %}
     {% endblock content %}
 </body>
 
 </html>
+
+<!--TODO agregar estilos a profile-->
+<!--TODO visalizar nombre, apellido, direccion de email,fecha de nacimeinto, nombre de usuario, editar contraseña,ect-->

@@ -4,10 +4,11 @@ from django.views.generic import ListView, CreateView, DetailView, DeleteView, U
 from apps.post.forms import NewPostForm, UpdatePostForm, CommentForm, PostFilterForm
 from django.urls import reverse, reverse_lazy
 from django.conf import settings
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from apps.post.models import Comment, Post, PostImage
+from apps.post.models import Comment, Post, PostImage, Category, Movie
 from django.db.models import Count
+
 
 
 class PostListView(ListView):
@@ -28,6 +29,25 @@ class PostListView(ListView):
             queryset = queryset.filter(title__icontains=search_query) |queryset.filter(author__username__icontains=search_query)
             
         return queryset.order_by(order_by)
+    
+    #NAVBAR DE CATEGORIAS
+
+    def navbar_view(request):
+        categories = Category.objects.all()  # Obtener todas las categorías
+
+        # Pasar las categorías a la plantilla
+        return render(request, 'base.html', {'categories': categories})
+    
+    def movie_list_view(request):
+        category_slug = request.GET.get('category', None)  # Obtener el slug de la categoría seleccionada
+        movies = Movie.objects.all()
+
+        if category_slug:
+            category = get_object_or_404(Category, slug=category_slug)
+            movies = movies.filter(category=category)  # Filtrar películas por la categoría seleccionada
+        
+        return render(request, 'movies/movie_list.html', {'movies': movies, 'category': category_slug})
+
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -85,6 +105,7 @@ class PostCreateView(CreateView):
             PostImage.objects.create(post=post, image=settings.DEFAULT_POST_IMAGE)
             
         return super().form_valid(form)
+    
     def get_success_url(self):
         return reverse('post:post_detail', kwargs={'slug': self.object.slug})
 
@@ -185,6 +206,27 @@ class PostDeleteView(DeleteView):
     model = Post
     success_url = reverse_lazy('post:post_list') # Redirecciona a la url
     # definida en el archivo urls.py con el nombre post_list
+
+#TODO POST DETAIL VIEW DE USUARIO PARA VER SUS POSTS
+
+class UserPostView(LoginRequiredMixin, ListView):
+    model = Post
+    template_name = 'post/user_posts.html'  # Nueva plantilla para posts del usuario
+    context_object_name = 'posts'
+    paginate_by = 10
+
+    def get_queryset(self):
+        # Mostrar solo los posts del usuario autenticado
+        return Post.objects.filter(author=self.request.user).order_by('-creation_date')
+    
+    # def get_context_data(self, **kwargs):
+        #context = super().get_context_data(**kwargs)
+        # Añadir lógica para filtros (fecha, alfabético, etc.)
+        # Ejemplo de filtro por fecha de creación descendente:
+        #order = self.request.GET.get('order', 'creation_date')
+        #context['posts'] = context['posts'].order_by(order)
+        #return context
+
 
 
 #mportante: En el método form_valid, se manejan las imágenes activas y las nuevas imágenes subidas por el usuario, y se guarda el post finalmente.

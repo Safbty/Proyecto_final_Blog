@@ -1,6 +1,8 @@
 <!-- blog_django\templates\post\post_create.html -->
 {% extends 'layouts/post_layout.html' %}
-{% block title %}Post | BLOG IA{% endblock title %}
+
+{% block title %}Post | ES CINE{% endblock title %}
+
 {% block content %}
 <h2>Crear nuevo post</h2>
 <form method="post" enctype="multipart/form-data">
@@ -13,12 +15,63 @@
         <p>{{ form.allow_comments.label_tag }} {{ form.allow_comments }}</p>
         <p><input type="file" name="images" multiple /></p>
     </div>
-    <button type="submit" class="bg-blue-500 text-white p-2 rounded-lg">
-        Crear Post
-    </button>
+    <button type="submit" class="bg-blue-500 text-white p-2 rounded-lg">Crear Post</button>
 </form>
 {% endblock content %}
 
 <!--En esta plantilla se ha definido un formulario que permite crear un nuevo post.
 Se ha definido un campo para el título, un campo para el contenido, un campo para permitir comentarios, y un campo para subir imágenes.
 Importante: El atributo enctype="multipart/form-data" es necesario para poder subir archivos.-->
+
+<!--TODO agregar más botones con otras funcionalidades si es necesario -->
+
+<!--TODO Customizar botones-->
+
+<!--
+HTML
+
+<div class="wrap">
+  <button class="button">Submit</button>
+</div>
+
+
+CSS
+
+html, body {
+  height: 100%;
+}
+
+.wrap {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  width: 140px;
+  height: 45px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #000;
+  background-color: #fff;
+  border: none;
+  border-radius: 45px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  }
+
+.button:hover {
+  background-color: #2EE59D;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+-->
+
