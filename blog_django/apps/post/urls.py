@@ -23,7 +23,11 @@ urlpatterns = [
     path('posts/<slug:slug>/comments/create/', views.CommentCreateView.as_view(), name='comment_create'),
     path('comments/<uuid:pk>/update/', views.CommentUpdateView.as_view(), name='comment_update'),
     path('comments/<uuid:pk>/delete/', views.CommentDeleteView.as_view(), name='comment_delete'),
-    path('user/', UserPostView.as_view(), name='user_posts'),  # Nueva URL para posts de un usuario 
+    path('user/', UserPostView.as_view(), name='user_posts'),  # Nueva URL para posts de un usuario
+    path('categories/create/', views.CategoryCreateView.as_view(), name='category_create'), #Urls para categorias vistas
+    path('categories/<slug:slug>/update/', views.CategoryUpdateView.as_view(), name='category_update'),
+    path('categories/<slug:slug>/delete/', views.CategoryDeleteView.as_view(), name='category_delete'),
+    path('movies/', views.movie_list_view, name='movie_list'),  #ruta de movie_list
 ]
 
 

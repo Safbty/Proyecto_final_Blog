@@ -8,7 +8,7 @@ class PostForm(forms.ModelForm):
         fields = ('title', 'content', 'allow_comments', 'category')
 
 
-#TODO ver porque imgen default se manteinen cuando ya se cargó una imagen para el post
+#TODO ver porque imgen default se manteinen cuando ya se cargó una imagen para el post (cambiar sistema CHECKBOX)
 
 class NewPostForm(PostForm):
     image = forms.ImageField(required=False)
@@ -46,11 +46,12 @@ class UpdatePostForm(PostForm):
 
     def save(self, commit=True):
         post = super().save(commit=False)
+
         if commit:
             post.save()
             if self.cleaned_data['image']:  # Si el usuario sube una nueva imagen
                 PostImage.objects.create(
-                    post=post, image=self.cleaned_data['image'])
+post=post, image=self.cleaned_data['image'])
 
             if self.active_images:  # Si hay imágenes activas y se quiere mantener alguna
                 for image in self.active_images:

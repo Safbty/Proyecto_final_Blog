@@ -1,7 +1,7 @@
 # blog_django/blog_django/views.py
 from django.views.generic import ListView
 from django.shortcuts import render
-from apps.post.models import Post
+from apps.post.models import Post, Category
 from apps.post.forms  import PostFilterForm
 from django.db.models import Count
 
@@ -11,7 +11,11 @@ class IndexView(ListView):
 
     model =  Post
     context_object_name=  'posts'
-    paginate_by = 10 # Definimos la paginación de 10 posts por página
+    paginate_by = 9 # Definimos la paginación de 10 posts por página
+
+    def category_view(request):
+        categories = Category.objects.all()  # Obtener todas las categorías
+        return render(request, 'index.html', {'categories': categories})
     
     def get_queryset(self):
         queryset = Post.objects.all().annotate(comments_count=Count('comments'))

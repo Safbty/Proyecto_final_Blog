@@ -1,41 +1,33 @@
 <!-- blog_django\templates\components\ui\navbar.html -->
-<nav>
-    <ul class="flex gap-4">
-        <li><a href="{% url 'home' %}">Inicio</a></li>
-        {% if user.is_authenticated %}
-        <li>
-            <a href="{% url 'post:user_posts' %}" class="text-white">Ver mis Posts</a>
-        </li>
-        {% endif %}
-    </ul>
-</nav>
+<!--TODO Agregar permiso para que admin vea "ver mis posts" y "publicar"-->
 
 
 <nav>
     <ul class="flex gap-4">
         {% if user.is_authenticated %}
         <strong>{{ user.alias }}</strong>
-        {% if user.is_collaborator %}
-        <li><a href="{% url 'post:post_create' %}">Publicar</a></li>
-        {% endif %}
-        <li><a href="{% url 'user:user_profile' user.pk %}">Perfil</a></li>
-        <li>
-            <form method="post" action="{% url 'user:auth_logout' %}?next={{ request.path }}">
-                {% csrf_token %}
-                <button type="submit">Cerrar sesión</button>
-            </form>
-        </li>
+            {% if user.is_collaborator or user.is_admin%}
+            <li><a href="{% url 'post:post_create' %}">Publicar</a></li>
+            <li><a href="{% url 'post:user_posts' %}" class="text-white">Ver mis Posts</a></li>
+            {% endif %}
+            <li><a href="{% url 'user:user_profile' user.pk %}">Perfil</a></li>
+            <li>
+                <form method="post" action="{% url 'user:auth_logout' %}?next={{ request.path }}">
+                    {% csrf_token %}
+                    <button type="submit">Cerrar sesión</button>
+                </form>
+            </li>
         {% else %}
-        <li>
-            <a href="{% url 'user:auth_login' %}?next={{ request.path }}">Iniciar sesión</a>
-        </li>
-        <li><a href="{% url 'user:auth_register' %}">Registrarse</a></li>
+            <li>
+                <a href="{% url 'user:auth_login' %}?next={{ request.path }}">Iniciar sesión</a>
+            </li>
+            <li><a href="{% url 'user:auth_register' %}">Registrarse</a></li>
         {% endif %}
     </ul>
 </nav>
 
 
-<!--TODO corregir este "ver post"-->
+<!--TODO corregir este "ver mis posts" segun cada permiso que tenga usuario-->
 
 <!--
 Nota:

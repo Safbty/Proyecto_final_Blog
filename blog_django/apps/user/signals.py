@@ -1,7 +1,7 @@
 from apps.user.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from apps.post.models import Post, Comment
+from apps.post.models import Post, Comment, Category
 from django.contrib.contenttypes.models import ContentType
 from  django.contrib.auth.models import Permission, Group
 
@@ -13,6 +13,7 @@ def create_groups_and_permissions(sender, instance,created, **kwargs):
             #TODO crear otros condicionales if  
             post_content_type= ContentType.objects.get_for_model(Post)
             comment_content_type= ContentType.objects.get_for_model(Comment)
+            category_content_type = ContentType.objects.get_for_model(Category)
 
             #Permisos POST
             view_post_permission= Permission.objects.get(codename="view_post", content_type= post_content_type)
@@ -32,14 +33,19 @@ def create_groups_and_permissions(sender, instance,created, **kwargs):
             
             delete_comment_permission = Permission.objects.get(codename="delete_comment", content_type=comment_content_type)
 
+            #Permisos CATEGORIAS
+            view_category_permission = Permission.objects.get(codename="view_category", content_type=category_content_type)
+            add_category_permission = Permission.objects.get(codename="add_category", content_type=category_content_type)
+            change_category_permission = Permission.objects.get(codename="change_category", content_type=category_content_type)
+            delete_category_permission = Permission.objects.get(codename="delete_category", content_type=category_content_type)
+
+
 
             # Crear grupo usuarios registrados
             registered_group, created = Group.objects.get_or_create(name='Registered')
             registered_group.permissions.add(
                 view_post_permission,
-                add_post_permission,
-                change_post_permission,
-                delete_post_permission,
+                view_category_permission,
                 view_comment_permission,
                 add_comment_permission,
                 change_comment_permission,
@@ -53,6 +59,10 @@ def create_groups_and_permissions(sender, instance,created, **kwargs):
                 add_post_permission,
                 change_post_permission,
                 delete_post_permission,
+                view_category_permission,
+                add_category_permission,
+                change_category_permission,
+                delete_category_permission,
                 view_comment_permission,
                 add_comment_permission,
                 change_comment_permission,
@@ -68,7 +78,7 @@ def create_groups_and_permissions(sender, instance,created, **kwargs):
         except ContentType.DoesNotExist:
             print('El tipo de conetenido aun no esta disponible.')
         except Permission.DoesNotExist:
-            print('Uno o mas permisio no estan disponible aun.')
+            print('Uno o mas permisos no estan disponible aun.')
 
 
 

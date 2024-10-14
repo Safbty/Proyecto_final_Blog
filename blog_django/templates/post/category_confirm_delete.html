@@ -1,0 +1,11 @@
+<!-- blog_django/templates/post/category_confirm_delete.html -->
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<h2>¿Estás seguro de que deseas eliminar esta categoría?</h2>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="bg-red-500 text-white p-2 rounded-lg">Eliminar</button>
+    <a href="{% url 'post:post_list' %}" class="bg-gray-500 text-white p-2 rounded-lg">Cancelar</a>
+</form>
+{% endblock content %}

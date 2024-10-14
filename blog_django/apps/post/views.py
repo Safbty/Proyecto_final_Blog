@@ -5,7 +5,7 @@ from apps.post.forms import NewPostForm, UpdatePostForm, CommentForm, PostFilter
 from django.urls import reverse, reverse_lazy
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from apps.post.models import Comment, Post, PostImage, Category, Movie
 from django.db.models import Count
 
@@ -15,7 +15,7 @@ class PostListView(ListView):
     model =  Post
     template_name = 'post/post_list.html'
     context_object_name=  'posts'
-    paginate_by = 10 # Definimos la paginación de 10 posts por página
+    paginate_by = 9 # Definimos la paginación de 10 posts por página
     
     def get_queryset(self):
         queryset = Post.objects.all().annotate(comments_count=Count('comments'))
@@ -43,10 +43,17 @@ class PostListView(ListView):
         movies = Movie.objects.all()
 
         if category_slug:
-            category = get_object_or_404(Category, slug=category_slug)
+            category = get_object_or_404(Category, slug=category_slug) #Buscar la categoría por slug
             movies = movies.filter(category=category)  # Filtrar películas por la categoría seleccionada
         
         return render(request, 'movies/movie_list.html', {'movies': movies, 'category': category_slug})
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        category_slug = self.request.GET.get('category')
+        if category_slug:
+            queryset = queryset.filter(category__slug=category_slug)
+        return queryset
 
     
     def get_context_data(self, **kwargs):
@@ -105,6 +112,11 @@ class PostCreateView(CreateView):
             PostImage.objects.create(post=post, image=settings.DEFAULT_POST_IMAGE)
             
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # Pasa la lista de categorías
+        return context
     
     def get_success_url(self):
         return reverse('post:post_detail', kwargs={'slug': self.object.slug})
@@ -189,12 +201,18 @@ class PostUpdateView(UpdateView):
         if images:
             for image in images:
                 PostImage.objects.create(post=post, image=image)
+
         # Si no se desea mantener ninguna imagen activa y no se subieron nuevas imágenes, se agrega una imagen por defecto
         
         if not keep_any_image_active and not images:
             PostImage.objects.create(post=post, image=settings.DEFAULT_POST_IMAGE)
         post.save() # Guardar el post finalmente
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # Pasa la lista de categorías
+        return context
     
     def get_success_url(self):
         # El reverse_lazy es para que no se ejecute hasta que se haya guardado el post
@@ -219,13 +237,16 @@ class UserPostView(LoginRequiredMixin, ListView):
         # Mostrar solo los posts del usuario autenticado
         return Post.objects.filter(author=self.request.user).order_by('-creation_date')
     
-    # def get_context_data(self, **kwargs):
-        #context = super().get_context_data(**kwargs)
-        # Añadir lógica para filtros (fecha, alfabético, etc.)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        #Añadir lógica para filtros (fecha, alfabético, etc.)
+        
         # Ejemplo de filtro por fecha de creación descendente:
-        #order = self.request.GET.get('order', 'creation_date')
-        #context['posts'] = context['posts'].order_by(order)
-        #return context
+        order = self.request.GET.get('order', 'creation_date')
+        context['posts'] = context['posts'].order_by(order)
+        
+        return context
 
 
 
@@ -287,6 +308,51 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         
         is_admin = self.request.user.is_superuser or self.request.user.groups.filter (name='Admins').exists()
         return is_comment_author or is_post_author or is_admin
+
+
+#CATEGORIAS
+
+#TODO vista de categorias (si es necesario)
+
+
+
+def movie_list_view(request):
+    category_slug = request.GET.get('category', None)
+    movies = Movie.objects.all()
+
+    if category_slug:
+        category = get_object_or_404(Category, slug=category_slug)
+        movies = movies.filter(category=category)  # Filtrar películas por la categoría seleccionada
+
+    return render(request, 'movies/movie_list.html', {'movies': movies, 'category': category_slug})
+
+
+class CategoryCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model = Category
+    fields = ['title']
+    template_name = 'post/category_form.html'
+    success_url = reverse_lazy('post:post_list')
+    permission_required = 'post.add_category'  # Verificar permiso
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+# Vista para actualizar categorías
+class CategoryUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = Category
+    fields = ['title']
+    template_name = 'post/category_form.html'
+    success_url = reverse_lazy('post:post_list')
+    permission_required = 'post.change_category'  # Verificar permiso
+
+# Vista para eliminar categorías
+class CategoryDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    model = Category
+    template_name = 'post/category_confirm_delete.html'
+    success_url = reverse_lazy('post:post_list')
+    permission_required = 'post.delete_category'  # Verificar permiso
+
+
 
 
 

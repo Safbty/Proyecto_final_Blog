@@ -1,15 +1,14 @@
 <!-- base.html -->
 <nav class="bg-gray-800 p-4">
     <div class="container mx-auto flex justify-between items-center">
-        <a href="/" class="text-white font-bold">Películas</a>
         
         <!-- Formulario para seleccionar género -->
-        <form method="GET" action="{% url 'movie_list' %}" class="flex items-center space-x-4">
+        <form method="GET" action="{% url 'post:movie_list' %}" class="flex items-center space-x-4">
             <label for="category" class="text-white">Género:</label>
             <select name="category" id="category" class="bg-gray-700 text-white p-2 rounded">
                 <option value="">Todos los géneros</option>
                 {% for category in categories %}
-                    <option value="{{ category.slug }}">{{ category.name }}</option>
+                    <option value="{{ category.slug }}">{{ category.title }}</option>
                 {% endfor %}
             </select>
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Buscar</button>
@@ -17,4 +16,4 @@
     </div>
 </nav>
 
-<!--PLANTILLA NAVBAR CATEGORY-->
+<!--TODO PLANTILLA NAVBAR CATEGORY cAMBIAR A INCLUDES/HEADER-->

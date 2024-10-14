@@ -5,9 +5,26 @@
     </div>
 </header>
 
+<!--
+<nav>
+    <ul class="flex gap-4">
+        <li><a href="{% url 'home' %}">Inicio</a></li>
+        {% if user.is_authenticated %}
+        <li>
+            <a href="{% url 'post:user_posts' %}" class="text-white">Ver mis Posts</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+-->
+
+
+
 <!--TODO definir icono de la pagina web-->
 
 <!--TODO: Terminar de definir estilo de navbar categoria-->
+<!--TODO: Definir logica para que al apretar "ES CINE" regrese al inicio-->
+<!--TODO intercambiar "ES CINE" por un logo fuente que cumpla con redirigir a inicio-->
 <!--
 <nav>
     <style>

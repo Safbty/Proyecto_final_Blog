@@ -3,22 +3,35 @@
 {% block title %}ACTUALIZAR Post | ES CINE{% endblock title %}
 
 {% block content %}
-<h2>Actualizar: {{ form.instance.title }}</h2>
+
+{% if user == post.author or  user.is_admin %}
+
+<h2 class="text-white">Actualizar post: {{ form.instance.title }}</h2>
 
 
 <form method="post" enctype="multipart/form-data" class="flex flex-col justify-center items-start w-[400px] gap-4">
   {% csrf_token %}
 
-  <div class="flex flex-col">{{ form.title.label_tag }} {{ form.title }}</div>
+  <div class="flex flex-col gap-4">{{ form.title.label_tag }} {{ form.title }}</div>
   <div class="flex flex-col">
     {{ form.content.label_tag }} {{ form.content }}
   </div>
 
-  <div class="flex gap-4">
+  <div class="flex gap-4 text-white">
     {{ form.allow_comments.label_tag }} {{ form.allow_comments }}
   </div>
 
-  <h3>Imágenes cargadas</h3>
+  <!-- Campo para seleccionar categoría -->
+  <div class="flex flex-col">
+    {{ form.category.label_tag }} {{ form.category }}
+  </div>
+
+  <!-- Botón para agregar/editar categorías -->
+  <p>
+    <a href="{% url 'post:category_create' %}" class="bg-green-500 text-white p-2 rounded-md">Agregar categoría</a>
+  </p>
+
+  <h3 class="text-white">Imágenes cargadas</h3>
 
   <div class="flex flex-col gap-4">
     {% for active_img in form.active_images %}
@@ -31,15 +44,15 @@
     {% comment %} <p>{{ active_img.creation_date }}</p> {% endcomment %}
     <p>
       <a href="{{ active_img.image.url }}" target="_blank">
-        <img class="inline-flex w-[200px] aspect-[16/9] object-cover" src="{{ active_img.image.url }}" alt="Portada {{ active_img.id }} del post" />
+        <img class="inline-flex w-[200px] aspect-[16/9] object-cover" src="{{active_img.image.url }}" alt="Portada {{ active_img.id }} del post" />
       </a>
       <input type="checkbox" name="keep_image_{{ active_img.id }}" id="keep_image_{{ active_img.id }}" checked />
-      <label for="keep_image_{{ active_img.id }}">Activa</label>
+      <label for="keep_image_{{ active_img.id }}" class="text-white">Activa</label>
     </p>
     {% endfor %}
   </div>
 
-  <h3>Cargar nuevas imágenes</h3>
+  <h3 class="text-white">Cargar nuevas imágenes</h3>
 
   <input type="file" name="images" multiple />
   <div class="flex gap-2">
@@ -49,6 +62,7 @@
 </form>
 
 {% comment %} <a href="javascript:history.back()">Cancelar</a> {% endcomment %}
+{% endif %}
 {% endblock content %}
 
 

@@ -1,8 +1,11 @@
 <!-- blog_django/templates/post/post_detail.html -->
 
 {% extends 'layouts/post_layout.html' %}
+
 {% block title %}Post | ES CINE{% endblock title %}
+
 {% block content %}
+
 {% if active_images %}
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
     {% for img in active_images %}
@@ -17,12 +20,25 @@
 <p>Publicado por: <strong class="font-bold text-white">{{ post.author.username }}</strong>
 </p>
 <p>Fecha de publicación: {{ post.creation_date }}</p>
+
+<!--categoria en detalle post-->
+<p>
+    {% if post.category %}
+        <span class="tag">{{ post.category.title }}</span>
+    {% endif %}
+</p>
+
+{% if user == post.author or  user.is_admin %}
 <p>Comentarios permitidos: {{ post.allow_comments|yesno:"Si,No" }}</p>
+
 <div class="flex mt-8 gap-4">
     <p>Slug: {{ post.slug }}</p>
     <a class="bg-blue-500 text-white p-2 rounded-lg" href="{% url 'post:post_update' slug=post.slug %}">Editar post</a>
     <a class="bg-red-500 text-white p-2 rounded-lg" href="{% url 'post:post_delete' slug=post.slug%}">Eliminar post</a>
 </div>
+
+{% endif %}
+
 <!-- Listado de comentarios -->
 <h4 class="mt-8 mb-4">Comentarios</h4>
 {% if post.comments.count > 0 %}
@@ -30,6 +46,7 @@
     {% for comment in post.comments.all %}
     <li class="mb-8">
         {% if comment.id == editing_comment_id %}
+        
         <!-- Formulario de actualización -->
         <form method="post" action="{% url 'post:comment_update' comment.id %}">
             {% csrf_token %}
@@ -38,6 +55,7 @@
             <a href="{% url 'post:post_detail' post.slug %}" class="text-red-500">Cancelar</a>
         </form>
         {% elif comment.id == deleting_comment_id %}
+        
         <!-- Formulario de confirmación de eliminación -->
         <form method="post" action="{% url 'post:comment_delete' comment.id %}">
             {% csrf_token %}
