@@ -4,6 +4,7 @@
 {% block title %}Post | ES CINE{% endblock title %}
 
 {% block content %}
+
 <h2>Crear nuevo post</h2>
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
@@ -16,7 +17,7 @@
 
         <!-- Campo para seleccionar categoría -->
         <div class="flex flex-col">
-          <label for="id_category">Categoría:</label>
+          <label for="id_category">Categoria:</label>
           <select name="category" id="id_category" class="bg-gray-700 text-white p-2 rounded">
               <option value="">Selecciona una categoría</option>
               {% for category in categories %}
@@ -25,9 +26,9 @@
           </select>
         </div>
         
-        <!-- Botón para agregar/editar categorías -->
+        <!-- Botón para agregar/editar categorías en category/create -->
         <p>
-            <a href="{% url 'post:category_create' %}" class="bg-green-500 text-white p-2 rounded-md">Agregar categoría</a>
+            <a href="{% url 'post:category_create' %}" class="bg-green-500 text-white p-2 rounded-md">Agregar Nueva categoría</a>
         </p>
 
 

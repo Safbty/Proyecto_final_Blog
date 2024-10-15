@@ -14,19 +14,28 @@
         </ul>
 
         <!-- Paginación -->
+        
         {% if is_paginated %}
-            <div>
-                <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+            <div class="flex justify-center">
+
+                <span class="text-white">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
             </div>
-            <div>
+
+            <div class="inline-flex">
                 {% if page_obj.has_previous %}
-                    <a href="?page=1">Primero</a>
-                    <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                    <a href="?page=1" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold rounded-l p-2 m-4">Primero</a>
+
+                    <a href="?page={{ page_obj.previous_page_number }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold rounded-r p-2 m-4">Anterior</a>
+
                 {% endif %}
+
                 {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}">Último</a>
+                    <a href="?page={{ page_obj.next_page_number }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold rounded-l p-2 m-4">Siguiente</a>
+
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold rounded-r p-2 m-4">Último</a>
+
                 {% endif %}
+
             </div>
         {% endif %}
     {% else %}

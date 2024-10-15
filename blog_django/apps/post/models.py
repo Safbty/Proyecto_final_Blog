@@ -95,66 +95,27 @@ class Comment(models.Model):
 class Category (models.Model):
     id =  models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=100, unique= True)
-    slug = models.SlugField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True, blank=True)
 
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)            
     
 #TODO CLASE MOVIE
 
 class Movie(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
-    release_date = models.DateField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
 
-    
-    
 
-
-
-
-#from django.contrib import admin
-
-# Register your models here.
-#from categories.models import Category
-
-#@admin.register(Category)
-#class CategoryAdmin(admin.ModelAdmin):
- #   """Category admin."""
-
-  #  list_display = ('id', 'name')
-
-#-----------------------------------
-
-#from django.apps import AppConfig
-#class CategoriesConfig(AppConfig):
-    #name = 'categories'
-
-#----------------------------------
-
-#""Categories"""
-
-#from django.db import models
-
-# Models
-
-# Create your models here.
-#class Category(models.Model):
-#   """Category model."""
-    
-#    name = models.CharField(max_length=100,unique=True)
-
-#    class Meta:
-#        ordering = ('name',)
-
-#    def __str__(self):
-#        return self.name
-
-#------------------------------------
 
 
 

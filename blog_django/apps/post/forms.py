@@ -50,8 +50,7 @@ class UpdatePostForm(PostForm):
         if commit:
             post.save()
             if self.cleaned_data['image']:  # Si el usuario sube una nueva imagen
-                PostImage.objects.create(
-post=post, image=self.cleaned_data['image'])
+                PostImage.objects.create(post=post, image=self.cleaned_data['image'])
 
             if self.active_images:  # Si hay imágenes activas y se quiere mantener alguna
                 for image in self.active_images:
@@ -87,7 +86,7 @@ class PostFilterForm(forms.Form):
         widget=forms.Select(attrs={'class': 'w-full p-2'})
     )        
 
-#FILTRO CATEGORIA
+#FILTRO CATEGORIA LISTADO
 class MovieFilterForm(forms.Form):
     category = forms.ModelChoiceField(
         queryset=Category.objects.all(),
@@ -95,6 +94,24 @@ class MovieFilterForm(forms.Form):
         empty_label="Selecciona un género",
         widget=forms.Select(attrs={'class': 'form-control'})
     )
+
+
+#TODO: formulario category
+
+class CategoryCreateForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['title']
+        labels = {
+        'Title': 'Nueva Categoria'
+        }
+        
+        widgets = {
+        'title': forms.TextInput(attrs={'placeholder': 'Agregar nueva categoria', 'class': 'form-control p-2'})
+        }  
+
+
+
 
 #En este formulario, definimos el formulario UpdatePostForm que hereda de PostForm y agrega un campo image de tipo forms.ImageField.
 

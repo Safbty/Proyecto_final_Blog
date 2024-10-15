@@ -15,16 +15,17 @@
     {% endfor %}
 </div>
 {% endif %}
-<h3 class="text-2xl uppercase font-bold">{{ post.title }}</h3>
-<p>{{ post.content }}</p>
-<p>Publicado por: <strong class="font-bold text-white">{{ post.author.username }}</strong>
+<h3 class="text-2xl uppercase font-bold text-white">{{ post.title }}</h3>
+<p  class="text-white">{{ post.content }}</p>
+
+<p class="text-white">Publicado por: <strong class="font-bold text-white">{{ post.author.username }}</strong>
 </p>
-<p>Fecha de publicación: {{ post.creation_date }}</p>
+<p class="text-white">Fecha de publicación: {{ post.creation_date }}</p>
 
 <!--categoria en detalle post-->
 <p>
     {% if post.category %}
-        <span class="tag">{{ post.category.title }}</span>
+        <span class="tag font-style: italic inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">{{ post.category.title }}</span>
     {% endif %}
 </p>
 
@@ -32,70 +33,82 @@
 <p>Comentarios permitidos: {{ post.allow_comments|yesno:"Si,No" }}</p>
 
 <div class="flex mt-8 gap-4">
-    <p>Slug: {{ post.slug }}</p>
     <a class="bg-blue-500 text-white p-2 rounded-lg" href="{% url 'post:post_update' slug=post.slug %}">Editar post</a>
     <a class="bg-red-500 text-white p-2 rounded-lg" href="{% url 'post:post_delete' slug=post.slug%}">Eliminar post</a>
 </div>
 
 {% endif %}
 
+{% if post.allow_comments %}
+
 <!-- Listado de comentarios -->
-<h4 class="mt-8 mb-4">Comentarios</h4>
-{% if post.comments.count > 0 %}
-<ul>
-    {% for comment in post.comments.all %}
-    <li class="mb-8">
-        {% if comment.id == editing_comment_id %}
-        
-        <!-- Formulario de actualización -->
-        <form method="post" action="{% url 'post:comment_update' comment.id %}">
-            {% csrf_token %}
-            <p class="flex flex-col">{{ edit_comment_form.content.label_tag }} {{edit_comment_form.content }}</p>
-            <button type="submit" class="text-blue-500">Actualizar</button>
-            <a href="{% url 'post:post_detail' post.slug %}" class="text-red-500">Cancelar</a>
-        </form>
-        {% elif comment.id == deleting_comment_id %}
-        
-        <!-- Formulario de confirmación de eliminación -->
-        <form method="post" action="{% url 'post:comment_delete' comment.id %}">
-            {% csrf_token %}
-            <p>¿Estás seguro de que deseas eliminar este comentario?</p>
-            <button type="submit" class="text-blue-500">Confirmar</button>
-            <a href="{% url 'post:post_detail' post.slug %}" class="text-red-500">Cancelar</a>
-        </form>
-        {% else %}
-        <!-- Comentario -->
-        <p>{{ comment.content }}</p>
-        <small>Escrito por <strong>{{ comment.author.username }}</strong> el {{comment.creation_date }}</small>
-        {% if comment.author == user %}
-        <a href="?edit_comment={{ comment.id }}" class="text-blue-500">Editar</a>
-        <a href="?delete_comment={{ comment.id }}" class="text-red-500">Eliminar</a>
-        {% elif user.is_collaborator and post.author == user and not comment.author.is_admin and not comment.author.is_superuser or user.is_superuser or user.is_admin %}
-        <a href="?delete_comment={{ comment.id }}" class="text-red-500">Eliminar</a>
-        {% endif %}
-        {% endif %}
-    </li>
-    {% endfor %}
-</ul>
+    <h4 class="mt-8 mb-4">Comentarios</h4>
+    {% if post.comments.count > 0 %}
+    <ul>
+        {% for comment in post.comments.all %}
+        <li class="mb-8">
+            {% if comment.id == editing_comment_id %}
+            
+            <!-- Formulario de actualización -->
+            <form method="post" action="{% url 'post:comment_update' comment.id %}">
+                {% csrf_token %}
+                <p class="flex flex-col">{{ edit_comment_form.content.label_tag }} {{edit_comment_form.content }}</p>
+                <button type="submit" class="text-blue-500">Actualizar</button>
+                <a href="{% url 'post:post_detail' post.slug %}" class="text-red-500">Cancelar</a>
+            </form>
+            {% elif comment.id == deleting_comment_id %}
+            
+            <!-- Formulario de confirmación de eliminación -->
+            <form method="post" action="{% url 'post:comment_delete' comment.id %}">
+                {% csrf_token %}
+                <p>¿Estás seguro de que deseas eliminar este comentario?</p>
+                <button type="submit" class="text-blue-500">Confirmar</button>
+                <a href="{% url 'post:post_detail' post.slug %}" class="text-red-500">Cancelar</a>
+            </form>
+            {% else %}
+            <!-- Comentario -->
+            <p>{{ comment.content }}</p>
+            <small>Escrito por <strong>{{ comment.author.username }}</strong> el {{comment.creation_date }}</small>
+            
+            {% if comment.author == user %}
+            <a href="?edit_comment={{ comment.id }}" class="text-blue-500">Editar</a>
+            <a href="?delete_comment={{ comment.id }}" class="text-red-500">Eliminar</a>
+            {% elif user.is_collaborator and post.author == user and not comment.author.is_admin and not comment.author.is_superuser or user.is_superuser or user.is_admin %}
+            <a href="?delete_comment={{ comment.id }}" class="text-red-500">Eliminar</a>
+            {% endif %}
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="text-white">No hay comentarios aún.</p>
+    {% endif %}
+
+    {% if user.is_authenticated%}
+    <h4 class="text-white">Agregar un comentario</h4>
+    <form method="post" action="{% url 'post:comment_create' post.slug %}">
+        {% csrf_token %}
+        <p class="flex flex-col mt-4 mb-8">{{ add_comment_form.content.label_tag }} {{add_comment_form.content }}</p>
+        <button type="submit" class="bg-blue-500 text-white p-2 rounded-lg">Agregar comentario</button>
+    </form>
+    {% else %}
+    <!--TODO if de que al ver post, no se vean  los botones de agregar comentario ni el mensaje "inicia sesion para realizar un comentario"-->
+
+    <p>
+        <a href="{% url 'user:auth_login' %}?next={{ request.path }}" class="hover:text-blue-500">Inicia sesión para agregar un comentario.
+        </a>
+    </p>
+    {% endif %}
+
 {% else %}
-<p class="text-white">No hay comentarios aún.</p>
+    <!-- Mensaje si no se permiten comentarios -->
+    <p class="text-gray-500 mt-4">❌Los comentarios no están permitidos en este post.</p>
 {% endif %}
-{% if user.is_authenticated %}
-<h4 class="text-white">Agregar un comentario</h4>
-<form method="post" action="{% url 'post:comment_create' post.slug %}">
-    {% csrf_token %}
-    <p class="flex flex-col mt-4 mb-8">{{ add_comment_form.content.label_tag }} {{add_comment_form.content }}</p>
-    <button type="submit" class="bg-blue-500 text-white p-2 rounded-lg">Agregar comentario</button>
-</form>
-{% else %}
-<p>
-    <a href="{% url 'user:auth_login' %}?next={{ request.path }}" class="hover:text-blue-500">Inicia sesión para agregar un comentario.
-    </a>
-</p>
-{% endif %}
+
 {% endblock content %}
 
 
+<!--TODO Condiciones para no ver lo que se deberia ver estando autenticado cuando se cierra sesion -->
 
 <!--En esta plantilla se ha definido la estructura para ver un post en detalle.
 Se ha definido el título, el contenido, el autor, la fecha de publicación, si permite comentarios, y dos

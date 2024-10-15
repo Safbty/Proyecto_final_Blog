@@ -1,13 +1,14 @@
 # blog_django/apps/post/views.py
 
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
-from apps.post.forms import NewPostForm, UpdatePostForm, CommentForm, PostFilterForm
+from apps.post.forms import NewPostForm, UpdatePostForm, CommentForm, PostFilterForm, CategoryCreateForm
 from django.urls import reverse, reverse_lazy
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from apps.post.models import Comment, Post, PostImage, Category, Movie
 from django.db.models import Count
+from django.utils.text import slugify
 
 
 
@@ -36,7 +37,7 @@ class PostListView(ListView):
         categories = Category.objects.all()  # Obtener todas las categorías
 
         # Pasar las categorías a la plantilla
-        return render(request, 'base.html', {'categories': categories})
+        return render(request, 'header_category.html', {'categories': categories})
     
     def movie_list_view(request):
         category_slug = request.GET.get('category', None)  # Obtener el slug de la categoría seleccionada
@@ -225,27 +226,24 @@ class PostDeleteView(DeleteView):
     success_url = reverse_lazy('post:post_list') # Redirecciona a la url
     # definida en el archivo urls.py con el nombre post_list
 
-#TODO POST DETAIL VIEW DE USUARIO PARA VER SUS POSTS
+
+#POST DETAIL VIEW DE USUARIO PARA VER SUS POSTS
 
 class UserPostView(LoginRequiredMixin, ListView):
     model = Post
     template_name = 'post/user_posts.html'  # Nueva plantilla para posts del usuario
     context_object_name = 'posts'
-    paginate_by = 10
+    paginate_by = 6
 
     def get_queryset(self):
-        # Mostrar solo los posts del usuario autenticado
-        return Post.objects.filter(author=self.request.user).order_by('-creation_date')
+        # Obtener el parámetro de orden desde la URL
+        order = self.request.GET.get('order', '-creation_date')  # Por defecto orden descendente por fecha de creación
+        # Mostrar solo los posts del usuario autenticado y aplicar el orden
+        return Post.objects.filter(author=self.request.user).order_by(order)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
-        #Añadir lógica para filtros (fecha, alfabético, etc.)
-        
-        # Ejemplo de filtro por fecha de creación descendente:
-        order = self.request.GET.get('order', 'creation_date')
-        context['posts'] = context['posts'].order_by(order)
-        
+        # Añadir cualquier otra lógica necesaria en el contexto
         return context
 
 
@@ -312,9 +310,8 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 #CATEGORIAS
 
-#TODO vista de categorias (si es necesario)
 
-
+#Vista de filtro/listado categorias
 
 def movie_list_view(request):
     category_slug = request.GET.get('category', None)
@@ -327,39 +324,59 @@ def movie_list_view(request):
     return render(request, 'movies/movie_list.html', {'movies': movies, 'category': category_slug})
 
 
-class CategoryCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    model = Category
-    fields = ['title']
-    template_name = 'post/category_form.html'
-    success_url = reverse_lazy('post:post_list')
-    permission_required = 'post.add_category'  # Verificar permiso
 
+
+# Vista para actualizar CRUD de categorías
+
+class CategoryCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = Category
+    form_class= CategoryCreateForm
+    template_name = 'post/category_form.html'
+    success_url = reverse_lazy('post:post_create')
+
+    # Definir la función test_func para validar los permisos
+    def test_func(self):
+        is_admin = self.request.user.is_superuser or self.request.user.groups.filter(name='Admins').exists()
+        is_collaborator = self.request.user.groups.filter(name='Collaborators').exists()
+        
+        # Solo permitir acceso a administradores o colaboradores
+        return is_admin or is_collaborator
+    
     def form_valid(self, form):
+        # Genera el slug automáticamente si aún no se ha hecho en el modelo
+        category = form.save(commit=False)
+
+        if not category.slug:
+            category.slug = slugify(category.title)
+
+        category.save()
         return super().form_valid(form)
 
-# Vista para actualizar categorías
-class CategoryUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+
+# Vista para eliminar categorías
+class CategoryDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Category
+    template_name = 'post/category_confirm_delete.html'
+    success_url = reverse_lazy('post:post_update')
+
+    def get_object(self):
+        # Obtener la categoría por UUID
+        pk = self.kwargs.get('id')  # Cambia 'slug' a 'id'
+        return get_object_or_404(self.get_queryset(), id=pk)  # Asegúrate de usar 'id'
+    
+    def test_func(self):
+        # Solo los usuarios con rol admin o collaborator pueden eliminar categorías
+        user = self.request.user
+        return user.is_superuser or user.groups.filter(name__in=['Admins', 'Collaborators']).exists()
+
+
+class CategoryUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Category
     fields = ['title']
     template_name = 'post/category_form.html'
-    success_url = reverse_lazy('post:post_list')
-    permission_required = 'post.change_category'  # Verificar permiso
-
-# Vista para eliminar categorías
-class CategoryDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    model = Category
-    template_name = 'post/category_confirm_delete.html'
-    success_url = reverse_lazy('post:post_list')
-    permission_required = 'post.delete_category'  # Verificar permiso
+    success_url = reverse_lazy('post:post_detail')
 
 
-
-
-
-#TODO Validar las vistas de cada clase con login required
-
-#TODO Validar que el usuario que está editando o borrando sea el autor del post
-#TODO Validar que el usuario que está editando o borrando sea el autor del comentario
 
 """
 La vista CommentCreateView hereda de CreateView y se encarga de gestionar la creación de un nuevo comentario.

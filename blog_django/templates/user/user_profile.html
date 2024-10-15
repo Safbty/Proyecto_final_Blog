@@ -19,9 +19,9 @@
     </div>
     <p class="text-white">Alias: {{ user.alias }}</p>
     {% if user.avatar %}
-        <img src="{{ user.avatar.url }}" alt="Avatar de {{ user.alias }}">
+        <img class="w-20 h-20 rounded-full" src="{{ user.avatar.url }}" alt="Avatar de {{ user.alias }}">
     {% else %}
-        <img src="{% static 'user/default/avatar_default.jpg' %}" alt="Avatar por defecto">
+        <img class="w-20 h-20 rounded-full" src="{% static 'user/default/avatar_default.jpg' %}" alt="Avatar por defecto">
     {% endif %}
     {% endblock content %}
 </body>

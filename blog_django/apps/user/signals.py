@@ -82,14 +82,17 @@ def create_groups_and_permissions(sender, instance,created, **kwargs):
 
 
 
-#TODO:  Crear un grupo para los colaboradores y asignarle los permisos correspondientes
-#TODO:  Crear un grupo para los usuarios registrados y asignarle los permisos
-#TODO: Crear  un grupo para los administradores y asignarle todos los permisos
+
+#TODO: Modificar permisos para los usuarios staff y superusuarios, corregir admins.
 
 #Grupos en bdd
     #collaborators
     #registered
     #admins
+
+#Grupos por defecto django:
+    #staff
+    #superusers
 
 """
 # Visitante: Solo puede ver posts y comentarios.
@@ -97,7 +100,3 @@ def create_groups_and_permissions(sender, instance,created, **kwargs):
 # Colaborador: Tiene los mismos permisos que el usuario registrado, con posibilidad de escalar en el futuro.
 # Admin: Tiene todos los permisos disponibles.
 """
-
-
-#TODO: realizar migraciones de models comments y post
-#TODO: crear nuevo superusuario (se elimina al borrar la base de datos)

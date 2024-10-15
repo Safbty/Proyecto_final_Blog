@@ -25,10 +25,11 @@ rounded-lg">Buscar</button>
         <p>Comentarios permitidos: {{ post.allow_comments|yesno:"Si,No" }}</p>
         {% endif %}
         <p>Comentarios: {{ post.amount_comments }}</p>
+
         <!--Categoria en vista general de posts-->
         <p>
                 {% if post.category %}
-                    <span class="tag">{{ post.category.title }}</span>
+                    <span class="tag font-style: italic inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">{{ post.category.title }}</span>
                 {% endif %}
         </p>
         <div class="flex gap-2 mt-8">

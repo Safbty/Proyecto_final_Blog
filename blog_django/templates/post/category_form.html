@@ -1,11 +1,12 @@
 <!-- blog_django/templates/post/category_form.html -->
-{% extends 'includes/base.html' %}
 
-{% block content %}
-<h2>Categoría</h2>
-<form method="post">
+
+<form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="bg-blue-500 text-white p-2 rounded-lg">Guardar</button>
+    <button type="submit" class="btn btn-primary">Crear Categoría</button>
 </form>
-{% endblock content %}
+
+<!--TODO category update, ver si se puede usar "include" para visualizar edicion en post update-->
+
+<!--TODO category  delete, ver si se puede usar "include" para visualizar eliminacion en post update-->
